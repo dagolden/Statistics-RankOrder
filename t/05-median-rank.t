@@ -1,4 +1,4 @@
-# Statistics::RankOrder  
+# Statistics::RankOrder
 use strict;
 
 use Test::More;
@@ -8,7 +8,7 @@ use Statistics::RankOrder;
 sub why {
     my %vars = @_;
     $Data::Dumper::Sortkeys = 1;
-    return "\n" . Data::Dumper->Dump([values %vars],[keys %vars]) . "\n";
+    return "\n" . Data::Dumper->Dump( [ values %vars ], [ keys %vars ] ) . "\n";
 }
 
 #--------------------------------------------------------------------------#
@@ -17,11 +17,8 @@ sub why {
 
 my %cases = (
     "case 1" => [
-        [    
-            [qw( A B C D E )],
-            [qw( B A E D C )],
-            [qw( B C A E D )],
-            [qw( D E B A C )],
+        [
+            [qw( A B C D E )], [qw( B A E D C )], [qw( B C A E D )], [qw( D E B A C )],
             [qw( A B C D E )],
         ],
         {
@@ -33,11 +30,8 @@ my %cases = (
         }
     ],
     "case 2" => [
-        [    
-            [qw( A B E C D )],
-            [qw( B A E D C )],
-            [qw( A D B E C )],
-            [qw( D E B A C )],
+        [
+            [qw( A B E C D )], [qw( B A E D C )], [qw( A D B E C )], [qw( D E B A C )],
             [qw( A B C D E )],
         ],
         {
@@ -50,15 +44,14 @@ my %cases = (
     ],
 );
 
-plan tests => scalar keys %cases ;
+plan tests => scalar keys %cases;
 
-while ( my ($label, $case) = each (%cases) ) {
-    my ($judges, $ranks) = @$case;
-    my $obj = Statistics::RankOrder->new ();
+while ( my ( $label, $case ) = each(%cases) ) {
+    my ( $judges, $ranks ) = @$case;
+    my $obj = Statistics::RankOrder->new();
     $obj->add_judge($_) for @$judges;
-    my $mr = {$obj->median_rank()};
-    is_deeply( $mr, $ranks, "is median_rank() correct for '$label'" ) or
-        diag why( got => $mr, expected => $ranks );
+    my $mr = { $obj->median_rank() };
+    is_deeply( $mr, $ranks, "is median_rank() correct for '$label'" )
+      or diag why( got => $mr, expected => $ranks );
 }
-
 

@@ -6,7 +6,7 @@ package Statistics::RankOrder;
 # ABSTRACT: Algorithms for determining overall rankings from a panel of judges
 # VERSION
 
-our @ISA     = qw( Class::Accessor::Fast );
+our @ISA = qw( Class::Accessor::Fast );
 
 use strict;
 
@@ -28,7 +28,7 @@ Creates a new object with no judges on the panel (i.e. no data);
 
     sub new {
         my $class = shift;
-        my $self = bless ({data => []}, ref($class) ? ref($class) : $class);
+        my $self = bless( { data => [] }, ref($class) ? ref($class) : $class );
         return $self;
     }
 }
@@ -43,9 +43,9 @@ the names of candidates ordered from best to worst.
 =cut
 
 sub add_judge {
-    my ($self, $obs) = @_;
-    push @{$self->data}, $obs;
-    return scalar @{$self->data};
+    my ( $self, $obs ) = @_;
+    push @{ $self->data }, $obs;
+    return scalar @{ $self->data };
 }
 
 =method C<best_majority_rank>
@@ -84,30 +84,30 @@ sub best_majority_rank {
     my ($self) = shift;
     my %candidates = $self->candidates;
     my %best_maj;
-    while (my ($cand,$scores) = (each %candidates) ) {
+    while ( my ( $cand, $scores ) = ( each %candidates ) ) {
         my @sorted = sort { $a <=> $b } @$scores;
-        my $index = int (@sorted / 2 );
-        my $bom = $sorted[$index];
-        my ($som, $tom, $to) = (0) x 3;
+        my $index  = int( @sorted / 2 );
+        my $bom    = $sorted[$index];
+        my ( $som, $tom, $to ) = (0) x 3;
         for (@sorted) {
             $to += $_;
             $tom += $_, $som++ if $_ <= $bom;
         }
-        $best_maj{$cand} = { 
-            bom => $bom, som => $som, tom => $tom, to => $to
+        $best_maj{$cand} = {
+            bom => $bom,
+            som => $som,
+            tom => $tom,
+            to  => $to
         };
     }
     my %compare;
     for my $k ( keys %best_maj ) {
         $compare{$k} = 0;
-        $compare{$k} += ( 
-            $best_maj{$k}{bom} <=> $best_maj{$_}{bom} # low is good
-                                ||
-            $best_maj{$_}{som} <=> $best_maj{$k}{som} # high is good
-                                ||
-            $best_maj{$k}{tom} <=> $best_maj{$_}{tom} # low is good
-                                ||
-            $best_maj{$k}{to}  <=> $best_maj{$_}{to} # low is good
+        $compare{$k} += (
+            $best_maj{$k}{bom} <=> $best_maj{$_}{bom}      # low is good
+              || $best_maj{$_}{som} <=> $best_maj{$k}{som} # high is good
+              || $best_maj{$k}{tom} <=> $best_maj{$_}{tom} # low is good
+              || $best_maj{$k}{to} <=> $best_maj{$_}{to}   # low is good
         ) for keys %best_maj;
     }
     return _scores_to_ranks(%compare);
@@ -126,11 +126,11 @@ sub candidates {
     my ($self) = @_;
     my %c;
     for my $j ( $self->judges ) {
-        push @{$c{$j->[$_]}}, $_ for 0 .. $#{$j};
+        push @{ $c{ $j->[$_] } }, $_ for 0 .. $#{$j};
     }
     return %c;
 }
-    
+
 =method C<judges>
 
  my @judges = $r->judges;
@@ -142,7 +142,7 @@ judge.
 
 sub judges {
     my ($self) = @_;
-    return @{$self->data};
+    return @{ $self->data };
 }
 
 =method C<mean_rank>
@@ -189,9 +189,9 @@ sub median_rank {
     my ($self) = shift;
     my %candidates = $self->candidates;
     my %medians;
-    while (my ($cand,$scores) = (each %candidates) ) {
+    while ( my ( $cand, $scores ) = ( each %candidates ) ) {
         my @sorted = sort { $a <=> $b } @$scores;
-        my $index = int (@sorted / 2 );
+        my $index = int( @sorted / 2 );
         $medians{$cand} = $sorted[$index];
     }
     return _scores_to_ranks(%medians);
@@ -216,13 +216,13 @@ values are their rankings, with 1 being best and higher numbers worse.
 =cut
 
 sub trimmed_mean_rank {
-    my ($self,$trim) = @_;
+    my ( $self, $trim ) = @_;
     die "Can't trim away all scores" if 2 * $trim >= $self->judges;
     my %candidates = $self->candidates;
     my %means;
-    while (my ($cand,$scores) = (each %candidates) ) {
+    while ( my ( $cand, $scores ) = ( each %candidates ) ) {
         my @sorted = sort { $a <=> $b } @$scores;
-        @sorted = @sorted[ $trim .. $#sorted- $trim ];
+        @sorted = @sorted[ $trim .. $#sorted - $trim ];
         my $avg = 0;
         $avg += $_ for @sorted;
         $means{$cand} = $avg / @sorted;
@@ -237,18 +237,18 @@ sub trimmed_mean_rank {
 sub _scores_to_ranks {
     my (%scores) = @_;
     my %ranks;
-    my $cur_rank = 0;
-    my $index = 0;
-    my $last_score = - keys %scores;
-    for my $cand (sort { $scores{$a} <=> $scores{$b} } keys %scores ) {
+    my $cur_rank   = 0;
+    my $index      = 0;
+    my $last_score = -keys %scores;
+    for my $cand ( sort { $scores{$a} <=> $scores{$b} } keys %scores ) {
         $index++;
         $cur_rank = $index if $scores{$cand} > $last_score;
         $ranks{$cand} = $cur_rank;
         $last_score = $scores{$cand};
     }
     return %ranks;
-} 
-    
+}
+
 1;
 
 =head1 SYNOPSIS
@@ -317,3 +317,5 @@ and Jody M. Sorensen.  L<http://mathcs.muhlenberg.edu/~rykken/skating-full.pdf>
 =back
 
 =cut
+
+# vim: ts=4 sts=4 sw=4 et:
