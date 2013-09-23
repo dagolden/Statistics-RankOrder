@@ -72,7 +72,7 @@ or better
 
 If a tie still exists after these comparisons, then the tie stands.  (In
 practice, this is generally rare.)  When a tie occurs, the next rank assigned
-after the tie is calculated as if the tie had not occured.  E.g., 1st, 2nd,
+after the tie is calculated as if the tie had not occurred.  E.g., 1st, 2nd,
 2nd, 4th, 5th.
 
 Returns a hash where the keys are the names of the candidates and the 
