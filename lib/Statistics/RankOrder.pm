@@ -6,13 +6,10 @@ package Statistics::RankOrder;
 # ABSTRACT: Algorithms for determining overall rankings from a panel of judges
 # VERSION
 
-our @ISA = qw( Class::Accessor::Fast );
-
-use strict;
-
-# Required modules
 use Carp;
-use Class::Accessor::Fast ();
+use Class::Tiny {
+    _data => sub { [] }
+};
 
 =method new
 
@@ -21,17 +18,6 @@ use Class::Accessor::Fast ();
 Creates a new object with no judges on the panel (i.e. no data);
 
 =cut
-
-{
-
-    __PACKAGE__->mk_accessors(qw( data ));
-
-    sub new {
-        my $class = shift;
-        my $self = bless( { data => [] }, ref($class) ? ref($class) : $class );
-        return $self;
-    }
-}
 
 =method C<add_judge>
 
@@ -44,8 +30,8 @@ the names of candidates ordered from best to worst.
 
 sub add_judge {
     my ( $self, $obs ) = @_;
-    push @{ $self->data }, $obs;
-    return scalar @{ $self->data };
+    push @{ $self->_data }, $obs;
+    return scalar @{ $self->_data };
 }
 
 =method C<best_majority_rank>
@@ -142,7 +128,7 @@ judge.
 
 sub judges {
     my ($self) = @_;
-    return @{ $self->data };
+    return @{ $self->_data };
 }
 
 =method C<mean_rank>
