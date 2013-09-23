@@ -1,7 +1,12 @@
-package Statistics::RankOrder;
+use 5.008001;
+use strict;
+use warnings;
 
-$VERSION = "0.12";
-@ISA     = qw( Class::Accessor::Fast );
+package Statistics::RankOrder;
+# ABSTRACT: Algorithms for determining overall rankings from a panel of judges
+# VERSION
+
+our @ISA     = qw( Class::Accessor::Fast );
 
 use strict;
 
@@ -9,67 +14,7 @@ use strict;
 use Carp;
 use Class::Accessor::Fast ();
 
-#--------------------------------------------------------------------------#
-# main pod documentation 
-#--------------------------------------------------------------------------#
-
-=head1 NAME
-
-Statistics::RankOrder - Algorithms for determining overall rankings from 
-a panel of judges
-
-=head1 SYNOPSIS
-
-  use Statistics::RankOrder;
-
-  my $r = Statistics::RankOrder->new();
-  
-  $r->add_judge( [qw( A B C )] );
-  $r->add_judge( [qw( A C B )] );
-  $r->add_judge( [qw( B A C )] );
-
-  my %ranks = $r->mean_rank;
-  my %ranks = $r->trimmed_mean_rank(1);
-  my %ranks = $r->median_rank;
-  my %ranks = $r->best_majority_rank;
-  
-=head1 DESCRIPTION
-
-This module offers algorithms for combining the rank-ordering of candidates by
-a panel of judges.  For the purpose of this module, the term "candidates" means
-candidates in an election, brands in a taste-test, competitors in a sporting
-event, and so on.  "Judges" means those rank-ordering the candidates, whether
-these are event judges, voters, etc.  Unlike "voting" algorithms (e.g.
-majority-rule or single-transferable-vote), these algorithms require judges to
-rank-order all candidates.  (Ties may be permissible for some algorithms).
-
-Algorithms included are:
-
-=over
-
-=item * Lowest-Mean
-
-=item * Trimmed-Lowest-Mean
-
-=item * Median-Rank
-
-=item * Best-of-Majority
-
-=back
-
-In this alpha version, there is minimal error checking. Future versions will
-have more robust error checking and may have additional ranking methods such as 
-pair-ranking methods.
-
-=head1 USAGE
-
-=cut
-
-#--------------------------------------------------------------------------#
-# new()
-#--------------------------------------------------------------------------#
-
-=head2 C<new>
+=method new
 
  $r = Statistics::RankOrder->new();
 
@@ -88,11 +33,7 @@ Creates a new object with no judges on the panel (i.e. no data);
     }
 }
 
-#--------------------------------------------------------------------------#
-# add_judge()
-#--------------------------------------------------------------------------#
-
-=head2 C<add_judge>
+=method C<add_judge>
 
  $r->add_judge( [qw( A B C D E )] );
 
@@ -107,11 +48,7 @@ sub add_judge {
     return scalar @{$self->data};
 }
 
-#--------------------------------------------------------------------------#
-# best_majority_rank()
-#--------------------------------------------------------------------------#
-
-=head2 C<best_majority_rank>
+=method C<best_majority_rank>
 
  my %ranks = $r->best_majority_rank;
 
@@ -176,11 +113,7 @@ sub best_majority_rank {
     return _scores_to_ranks(%compare);
 }
 
-#--------------------------------------------------------------------------#
-# candidates()
-#--------------------------------------------------------------------------#
-
-=head2 C<candidates>
+=method C<candidates>
 
  my %candidates = $r->candidates;
 
@@ -198,11 +131,7 @@ sub candidates {
     return %c;
 }
     
-#--------------------------------------------------------------------------#
-# judges()
-#--------------------------------------------------------------------------#
-
-=head2 C<judges>
+=method C<judges>
 
  my @judges = $r->judges;
 
@@ -216,11 +145,7 @@ sub judges {
     return @{$self->data};
 }
 
-#--------------------------------------------------------------------------#
-# mean_rank()
-#--------------------------------------------------------------------------#
-
-=head2 C<mean_rank>
+=method C<mean_rank>
 
  my %ranks = $r->mean_rank;
 
@@ -241,11 +166,7 @@ sub mean_rank {
     return $self->trimmed_mean_rank(0);
 }
 
-#--------------------------------------------------------------------------#
-# median_rank()
-#--------------------------------------------------------------------------#
-
-=head2 C<median_rank>
+=method C<median_rank>
 
  my %ranks = $r->median_rank;
 
@@ -276,11 +197,7 @@ sub median_rank {
     return _scores_to_ranks(%medians);
 }
 
-#--------------------------------------------------------------------------#
-# trimmed_meanrank()
-#--------------------------------------------------------------------------#
-
-=head2 C<trimmed_mean_rank>
+=method C<trimmed_mean_rank>
 
  my %ranks = $r->trimmed_mean_rank( N );
 
@@ -314,7 +231,7 @@ sub trimmed_mean_rank {
 }
 
 #--------------------------------------------------------------------------#
-# _scores_to_ranks
+# Private functions
 #--------------------------------------------------------------------------#
 
 sub _scores_to_ranks {
@@ -332,8 +249,50 @@ sub _scores_to_ranks {
     return %ranks;
 } 
     
-1; #this line is important and will help the module return a true value
-__END__
+1;
+
+=head1 SYNOPSIS
+
+  use Statistics::RankOrder;
+
+  my $r = Statistics::RankOrder->new();
+  
+  $r->add_judge( [qw( A B C )] );
+  $r->add_judge( [qw( A C B )] );
+  $r->add_judge( [qw( B A C )] );
+
+  my %ranks = $r->mean_rank;
+  my %ranks = $r->trimmed_mean_rank(1);
+  my %ranks = $r->median_rank;
+  my %ranks = $r->best_majority_rank;
+  
+=head1 DESCRIPTION
+
+This module offers algorithms for combining the rank-ordering of candidates by
+a panel of judges.  For the purpose of this module, the term "candidates" means
+candidates in an election, brands in a taste-test, competitors in a sporting
+event, and so on.  "Judges" means those rank-ordering the candidates, whether
+these are event judges, voters, etc.  Unlike "voting" algorithms (e.g.
+majority-rule or single-transferable-vote), these algorithms require judges to
+rank-order all candidates.  (Ties may be permissible for some algorithms).
+
+Algorithms included are:
+
+=over
+
+=item * Lowest-Mean
+
+=item * Trimmed-Lowest-Mean
+
+=item * Median-Rank
+
+=item * Best-of-Majority
+
+=back
+
+In this alpha version, there is minimal error checking. Future versions will
+have more robust error checking and may have additional ranking methods such as 
+pair-ranking methods.
 
 =head1 SEE ALSO
 
@@ -356,38 +315,5 @@ pp. 1075-1079
 and Jody M. Sorensen.  L<http://mathcs.muhlenberg.edu/~rykken/skating-full.pdf>
 
 =back
-
-=head1 INSTALLATION
-
-The following commands will build, test, and install this module:
-
- perl Build.PL
- perl Build
- perl Build test
- perl Build install
-
-=head1 BUGS
-
-Please report bugs using the CPAN Request Tracker at 
-http://rt.cpan.org/NoAuth/Bugs.html?Dist=Statistics-RankOrder
-
-=head1 AUTHOR
-
-David A Golden (DAGOLDEN)
-
-dagolden@cpan.org
-
-http://dagolden.com/
-
-=head1 COPYRIGHT
-
-Copyright (c) 2005 by David A Golden
-
-This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
-
-The full text of the license can be found in the
-LICENSE file included with this module.
-
 
 =cut
