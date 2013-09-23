@@ -1,15 +1,8 @@
-# Statistics::RankOrder
 use strict;
+use warnings;
 
-use Test::More;
-use Data::Dumper;
+use Test::More 0.88;
 use Statistics::RankOrder;
-
-sub why {
-    my %vars = @_;
-    $Data::Dumper::Sortkeys = 1;
-    return "\n" . Data::Dumper->Dump( [ values %vars ], [ keys %vars ] ) . "\n";
-}
 
 #--------------------------------------------------------------------------#
 # Test Data
@@ -91,6 +84,6 @@ while ( my ( $label, $case ) = each(%cases) ) {
     $obj->add_judge($_) for @$judges;
     my $mr = { $obj->best_majority_rank() };
     is_deeply( $mr, $ranks, "is best_majority_rank() correct for '$label'" )
-      or diag why( got => $mr, expected => $ranks );
+      or diag explain { got => $mr, expected => $ranks };
 }
 

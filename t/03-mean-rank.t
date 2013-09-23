@@ -1,15 +1,8 @@
-# Statistics::RankOrder
 use strict;
+use warnings;
 
 use Test::More;
-use Data::Dumper;
 use Statistics::RankOrder;
-
-sub why {
-    my %vars = @_;
-    $Data::Dumper::Sortkeys = 1;
-    return "\n" . Data::Dumper->Dump( [ values %vars ], [ keys %vars ] ) . "\n";
-}
 
 #--------------------------------------------------------------------------#
 # Test Data
