@@ -140,7 +140,7 @@ rank is computed for each candidate.  The candidate with the lowest mean rank
 is placed 1st, the second lowest mean rank is 2nd, and so on.  If the mean
 ranks are the same, the candidates tie for that position.  When a tie occurs,
 the next rank assigned after the tie is calculated as if the tie had not
-occured.  E.g., 1st, 2nd, 2nd, 4th, 5th.
+occurred.  E.g., 1st, 2nd, 2nd, 4th, 5th.
 
 Returns a hash where the keys are the names of the candidates and the 
 values are their rankings, with 1 being best and higher numbers worse. 
@@ -164,7 +164,7 @@ support that rank or better.  The candidate with the lowest median rank is
 placed 1st, the second lowest median rank is 2nd, and so on.  If the median
 ranks are the same, the candidates tie for that position.  When a tie occurs,
 the next rank assigned after the tie is calculated as if the tie had not
-occured.  E.g., 1st, 2nd, 2nd, 4th, 5th.
+occurred.  E.g., 1st, 2nd, 2nd, 4th, 5th.
 
 Returns a hash where the keys are the names of the candidates and the 
 values are their rankings, with 1 being best and higher numbers worse. 
@@ -193,7 +193,7 @@ and N highest scores.  E.g. C<trimmed_mean_rank(2)> will drop
 the 2 lowest and highest scores.  The candidate with the lowest mean rank is
 placed 1st, the second lowest mean rank is 2nd, and so on.  If the mean ranks
 are the same, the candidates tie for that position.  When a tie occurs, the
-next rank assigned after the tie is calculated as if the tie had not occured.
+next rank assigned after the tie is calculated as if the tie had not occurred.
 E.g., 1st, 2nd, 2nd, 4th, 5th.
 
 Returns a hash where the keys are the names of the candidates and the 
